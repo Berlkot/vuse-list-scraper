@@ -5,8 +5,6 @@ import asyncio
 import ssl
 import certifi
 
-# 0 - снилс 1 - баллы 2 - приоритет 4 - оригинал
-
 
 def iter_data(data, indices):
     for i in indices:
@@ -155,7 +153,8 @@ class Gatherer:
         conn = aiohttp.TCPConnector(ssl=ssl_context)
         kwargs = {}
         for i in url:
-            kwargs[i] = url[i]
+            for k, v in i.items():
+                kwargs[k] = v
         return aiohttp.ClientSession(connector=conn, **kwargs)
 
     async def get_response(self, uni: str, url):
