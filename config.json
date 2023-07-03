@@ -1,0 +1,82 @@
+{
+    "url_mapping": {
+        "мирэа": [
+            [
+                "https://priem.mirea.ru/accepted-entrants-list/personal_code_rating.php?competition=1748193468849593654&prior=any&documentType=any&accepted=0&acceptedEntrant=any&onlyActive=1&onlyPaid=0"
+            ]
+        ],
+        "мэи": [
+            [
+                "https://pk.mpei.ru/inform/list581bacc.html"
+            ]
+        ],
+
+        "политех": [
+            [
+                "https://raitinglistpk.mospolytech.ru/rating_list_ajax.php",
+                {
+                    "select1": "000000034_01",
+                    "specCode":"01.03.02_Интеллектуальные системы управления транспортом",
+                    "eduForm": "Очная",
+                    "eduFin": "Бюджетная основа"
+                }
+            ]
+        ]
+    },
+    "url_masking":[
+
+    ],
+    "site_specials": {
+        "мэи": {
+            "request_type": "GET",
+            "true": "да",
+            "false": "нет",
+            "снилс": 0,
+            "баллы": 1,
+            "оригинал": 9,
+            "приоритет": 10
+        },
+        "мирэа": {
+            "request_type": "GET",
+            "true": "да",
+            "false": "нет",
+            "снилс": 1,
+            "баллы": 9,
+            "оригинал": 3,
+            "приоритет": 2
+        },
+        "политех": {
+            "request_type": "POST",
+            "true": "да",
+            "false": "",
+            "снилс": 5,
+            "баллы": 23,
+            "оригинал": 27,
+            "приоритет": 29
+        }
+    },
+    "track_values": [
+        "снилс",
+        "баллы",
+        "оригинал",
+        "приоритет"
+    ],
+    "compute_sum": [
+        2
+    ],
+    "compute_average": [
+        1, 3
+    ],
+    "compute_max": [
+        1
+    ],
+    "compute_min": [
+        1
+    ],
+    "compute_names": {
+        "sum": "Сумма",
+        "average": "Сред. Знач.",
+        "max": "Макс",
+        "min": "Мин"
+    }
+}
