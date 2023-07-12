@@ -1,5 +1,5 @@
 # Universities list scraper
-Scrapes universities for data analysis of applicants stats [^1]
+Scrapes universities for data analysis of applicants stats
 - [x] Get requests
 - [x] Post requests
 - [x] Adding columns
@@ -87,5 +87,3 @@ Program has per-domain rate-limiting feature
 To set rate-limit time change default `"ratelimit_value"` to any number of seconds you want to wait for
 ### Disabling Rate-limiting
 To disable rate-limiting columns set `"ratelimit_requests"` to `false`
-
-[^1] built for internal use-case. 
