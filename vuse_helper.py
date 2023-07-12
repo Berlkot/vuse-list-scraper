@@ -4,6 +4,7 @@ import json
 import asyncio
 import ssl
 import certifi
+import datetime
 
 
 def iter_data(data, indices):
@@ -74,10 +75,9 @@ class GathererData:
         pass
 
     async def calculate_data(self):
-        self.csv_data += ",," + ",".join(self.config["track_values"]) + "\n"
+        self.csv_data += "Вуз,Направление," + ",".join(self.config["track_values"]) + "\n"
         ind = 0
         for uni in self.mapping:
-            self.csv_data += uni + "\n\n"
             for index, table in enumerate(self.mapping[uni]):
                 self.compute_data = {
                     "sum": self.row_data_length.copy(),
@@ -90,7 +90,6 @@ class GathererData:
                     st = self.config["url_masking"][ind]
                 else:
                     st = self.config["url_mapping"][uni][index][0]
-                self.csv_data += "," + st + "\n"
                 ind += 1
                 for row in table:
                     try:
@@ -107,19 +106,20 @@ class GathererData:
                             data[j_index] = "1"
                         if self.site_specials[uni]["false"] == cell:
                             data[j_index] = "0"
-                    self.csv_data += ",," + ",".join(data) + "\n"
+                    self.csv_data += f"{uni},{st}," + ",".join(data) + "\n"
                     self.compute_sum(data)
                     self.compute_average(data)
                     self.compute_max(data)
                     self.compute_min(data)
-                for i in self.compute_data:
-                    if i == "average":
-                        st = join_average_result(self.compute_data[i])
-                    else:
-                        st = join_result(self.compute_data[i])
-                    self.csv_data += f",{self.config['compute_names'][i]}:," + st + "\n"
-                self.csv_data += "\n"
-            self.csv_data += "\n"
+                if self.config["compute"]:
+                    for i in self.compute_data:
+                        if i == "average":
+                            st = join_average_result(self.compute_data[i])
+                        else:
+                            st = join_result(self.compute_data[i])
+                        cell_len = len(self.config["track_values"]) * ","
+                        self.csv_data += cell_len + f",{self.config['compute_names'][i]}:," + st + "\n"
+                    self.csv_data += "\n"
 
     def write_to_csv(self):
         with open("./result.csv", "w") as f:
@@ -132,6 +132,8 @@ class Gatherer:
         self.site_specials = config["site_specials"]
         # save all config data for top level lists
         self.config = config
+        self.ratelimit_map = {}
+        self.ratelimit = config["ratelimit_value"]
 
     @staticmethod
     async def parse_data(text: str):
@@ -160,6 +162,11 @@ class Gatherer:
     async def get_response(self, uni: str, url):
         session = await self.create_session(url[2:])
         query_type = self.site_specials[uni]["request_type"]
+        if uni in self.ratelimit_map and self.config["ratelimit_requests"]:
+            while datetime.datetime.now() < self.ratelimit_map[uni]:
+                sleep = self.ratelimit_map[uni] - datetime.datetime.now()
+                await asyncio.sleep(sleep.seconds + 1)
+        self.ratelimit_map[uni] = datetime.datetime.now() + datetime.timedelta(seconds=self.ratelimit)
         match query_type:
             case "GET":
                 response = await session.get(url[0])

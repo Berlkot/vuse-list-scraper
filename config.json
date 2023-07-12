@@ -61,6 +61,9 @@
         "оригинал",
         "приоритет"
     ],
+    "ratelimit_requests": true,
+    "ratelimit_value": 10,
+    "compute": false,
     "compute_sum": [
         2
     ],
